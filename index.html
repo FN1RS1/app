@@ -3,62 +3,306 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Мой Mini App</title>
+    <title>Work App</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
+        :root {
+            --primary-color: #0088cc;
+            --secondary-color: #006699;
+            --bg-color: #f5f5f5;
+            --card-color: #ffffff;
+            --text-color: #333333;
+            --border-radius: 12px;
+            --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Segoe UI', Arial, sans-serif;
             margin: 0;
-            padding: 20px;
-            background-color: #f5f5f5;
-            color: #333;
+            padding: 0;
+            background-color: var(--bg-color);
+            color: var(--text-color);
         }
+
         .container {
-            max-width: 600px;
-            margin: 0 auto;
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            max-width: 100%;
+            padding: 16px;
+            box-sizing: border-box;
         }
-        h1 {
-            color: #0088cc;
+
+        .header {
             text-align: center;
+            margin-bottom: 24px;
         }
-        button {
-            background: #0088cc;
+
+        .header h1 {
+            color: var(--primary-color);
+            margin-bottom: 8px;
+            font-size: 24px;
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .card {
+            background-color: var(--card-color);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            margin-bottom: 16px;
+            box-shadow: var(--box-shadow);
+        }
+
+        .card h2 {
+            color: var(--primary-color);
+            margin-top: 0;
+            font-size: 20px;
+        }
+
+        .status-card {
+            border-left: 4px solid #4CAF50;
+        }
+
+        .payment-card {
+            border-left: 4px solid #FF9800;
+        }
+
+        .profile-card {
+            border-left: 4px solid #9C27B0;
+        }
+
+        .nav-tabs {
+            display: flex;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-color: var(--card-color);
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+            z-index: 100;
+        }
+
+        .tab-button {
+            flex: 1;
+            text-align: center;
+            padding: 12px 0;
+            cursor: pointer;
+            color: #666;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        .tab-button.active {
+            color: var(--primary-color);
+            border-top: 2px solid var(--primary-color);
+        }
+
+        .tab-button i {
+            display: block;
+            margin-bottom: 4px;
+            font-size: 20px;
+        }
+
+        .profile-info {
+            display: flex;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .profile-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-right: 16px;
+            border: 3px solid var(--primary-color);
+        }
+
+        .profile-details {
+            flex: 1;
+        }
+
+        .profile-name {
+            font-size: 18px;
+            font-weight: bold;
+            margin: 0 0 4px 0;
+        }
+
+        .profile-username {
+            color: #666;
+            margin: 0 0 8px 0;
+        }
+
+        .info-row {
+            display: flex;
+            margin-bottom: 8px;
+        }
+
+        .info-label {
+            font-weight: bold;
+            width: 100px;
+            color: #666;
+        }
+
+        .info-value {
+            flex: 1;
+        }
+
+        .payment-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .payment-date {
+            color: #666;
+        }
+
+        .payment-amount {
+            font-weight: bold;
+            color: #4CAF50;
+        }
+
+        .add-payment {
+            display: flex;
+            margin-top: 16px;
+        }
+
+        .add-payment input {
+            flex: 1;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-right: 8px;
+        }
+
+        .add-payment button {
+            background-color: var(--primary-color);
             color: white;
             border: none;
-            padding: 10px 15px;
-            border-radius: 5px;
+            border-radius: 4px;
+            padding: 8px 16px;
             cursor: pointer;
-            width: 100%;
-            font-size: 16px;
-            margin-top: 10px;
         }
-        button:hover {
-            background: #006699;
+
+        .status-message {
+            background-color: #E8F5E9;
+            padding: 16px;
+            border-radius: var(--border-radius);
+            margin-top: 16px;
         }
-        .user-data {
-            margin-top: 20px;
-            padding: 10px;
-            background: #f0f8ff;
-            border-radius: 5px;
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Иконки (можно заменить на реальные иконки) */
+        .icon {
+            font-style: normal;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>🚀 Мой Mini App</h1>
-        <p>Это демо-приложение внутри Telegram!</p>
-        
-        <button onclick="showUserData()">Показать мои данные</button>
-        <button onclick="sendToBot()">Отправить сообщение боту</button>
-        <button onclick="closeApp()">Закрыть приложение</button>
-        
-        <div id="userData" class="user-data" style="display: none;">
-            <h3>Ваши данные из Telegram:</h3>
-            <p id="dataOutput"></p>
+        <div class="header">
+            <h1>Work App</h1>
+        </div>
+
+        <!-- Вкладка "Статус работы" -->
+        <div id="statusTab" class="tab-content active">
+            <div class="card status-card">
+                <h2>Статус работы</h2>
+                <p>Текущий статус вашей работы:</p>
+                
+                <div class="status-message">
+                    <p><strong>Льем номера фулл ворк!</strong></p>
+                    <p>Все работает стабильно, продолжаем в том же духе!</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Вкладка "Выплаты" -->
+        <div id="paymentsTab" class="tab-content">
+            <div class="card payment-card">
+                <h2>История выплат</h2>
+                
+                <div id="paymentsList">
+                    <div class="payment-item">
+                        <div class="payment-info">
+                            <div class="payment-description">Выплата за неделю</div>
+                            <div class="payment-date">15.06.2023</div>
+                        </div>
+                        <div class="payment-amount">+15000 ₽</div>
+                    </div>
+                    
+                    <div class="payment-item">
+                        <div class="payment-info">
+                            <div class="payment-description">Бонус за реферала</div>
+                            <div class="payment-date">10.06.2023</div>
+                        </div>
+                        <div class="payment-amount">+5000 ₽</div>
+                    </div>
+                </div>
+                
+                <div class="add-payment">
+                    <input type="text" id="paymentDescription" placeholder="Описание">
+                    <input type="number" id="paymentAmount" placeholder="Сумма">
+                    <button onclick="addPayment()">Добавить</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Вкладка "Профиль" -->
+        <div id="profileTab" class="tab-content">
+            <div class="card profile-card">
+                <h2>Мой профиль</h2>
+                
+                <div class="profile-info">
+                    <img id="userAvatar" src="https://via.placeholder.com/80" alt="Аватар" class="profile-avatar">
+                    <div class="profile-details">
+                        <h3 id="userName" class="profile-name">Иван Иванов</h3>
+                        <p id="userUsername" class="profile-username">@username</p>
+                    </div>
+                </div>
+                
+                <div class="info-row">
+                    <div class="info-label">ID:</div>
+                    <div id="userId" class="info-value">123456789</div>
+                </div>
+                
+                <div class="info-row">
+                    <div class="info-label">Статус:</div>
+                    <div class="info-value">Работает</div>
+                </div>
+                
+                <div class="info-row">
+                    <div class="info-label">Дата регистрации:</div>
+                    <div class="info-value">01.05.2023</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Нижнее меню -->
+    <div class="nav-tabs">
+        <div class="tab-button active" onclick="openTab('statusTab', this)">
+            <span class="icon">📊</span>
+            Статус
+        </div>
+        <div class="tab-button" onclick="openTab('paymentsTab', this)">
+            <span class="icon">💰</span>
+            Выплаты
+        </div>
+        <div class="tab-button" onclick="openTab('profileTab', this)">
+            <span class="icon">👤</span>
+            Профиль
         </div>
     </div>
 
@@ -69,40 +313,65 @@
         // Развернуть приложение на весь экран
         tg.expand();
         
-        // Показать данные пользователя
-        function showUserData() {
+        // Заполняем профиль данными из Telegram
+        function loadProfile() {
             const user = tg.initDataUnsafe.user;
-            const userDataDiv = document.getElementById('userData');
-            const dataOutput = document.getElementById('dataOutput');
-            
             if (user) {
-                dataOutput.innerHTML = `
-                    ID: ${user.id}<br>
-                    Имя: ${user.first_name}<br>
-                    Фамилия: ${user.last_name || 'не указана'}<br>
-                    Username: @${user.username || 'не указан'}
-                `;
-                userDataDiv.style.display = 'block';
-            } else {
-                dataOutput.innerHTML = 'Данные пользователя недоступны.';
-                userDataDiv.style.display = 'block';
+                document.getElementById('userName').textContent = 
+                    `${user.first_name} ${user.last_name || ''}`.trim();
+                document.getElementById('userUsername').textContent = `@${user.username || 'не указан'}`;
+                document.getElementById('userId').textContent = user.id;
+                
+                // Установка аватарки (если есть)
+                if (user.photo_url) {
+                    document.getElementById('userAvatar').src = user.photo_url;
+                }
             }
         }
         
-        // Отправить данные боту
-        function sendToBot() {
-            tg.sendData(JSON.stringify({ action: "hello", text: "Привет, бот!" }));
+        // Переключение между вкладками
+        function openTab(tabId, element) {
+            // Скрыть все вкладки
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Убрать активный класс у всех кнопок
+            document.querySelectorAll('.tab-button').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Показать выбранную вкладку
+            document.getElementById(tabId).classList.add('active');
+            element.classList.add('active');
         }
         
-        // Закрыть Mini App
-        function closeApp() {
-            tg.close();
+        // Добавление новой выплаты
+        function addPayment() {
+            const description = document.getElementById('paymentDescription').value;
+            const amount = document.getElementById('paymentAmount').value;
+            
+            if (!description || !amount) return;
+            
+            const paymentItem = document.createElement('div');
+            paymentItem.className = 'payment-item';
+            paymentItem.innerHTML = `
+                <div class="payment-info">
+                    <div class="payment-description">${description}</div>
+                    <div class="payment-date">${new Date().toLocaleDateString()}</div>
+                </div>
+                <div class="payment-amount">+${amount} ₽</div>
+            `;
+            
+            document.getElementById('paymentsList').prepend(paymentItem);
+            
+            // Очищаем поля ввода
+            document.getElementById('paymentDescription').value = '';
+            document.getElementById('paymentAmount').value = '';
         }
         
-        // Можно добавить обработчик событий от Telegram
-        tg.onEvent('viewportChanged', () => {
-            console.log('Размер окна изменился');
-        });
+        // Загружаем данные профиля при запуске
+        document.addEventListener('DOMContentLoaded', loadProfile);
     </script>
 </body>
 </html>
