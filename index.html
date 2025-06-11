@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Мой Mini App</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            color: #0088cc;
+            text-align: center;
+        }
+        button {
+            background: #0088cc;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 16px;
+            margin-top: 10px;
+        }
+        button:hover {
+            background: #006699;
+        }
+        .user-data {
+            margin-top: 20px;
+            padding: 10px;
+            background: #f0f8ff;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 Мой Mini App</h1>
+        <p>Это демо-приложение внутри Telegram!</p>
+        
+        <button onclick="showUserData()">Показать мои данные</button>
+        <button onclick="sendToBot()">Отправить сообщение боту</button>
+        <button onclick="closeApp()">Закрыть приложение</button>
+        
+        <div id="userData" class="user-data" style="display: none;">
+            <h3>Ваши данные из Telegram:</h3>
+            <p id="dataOutput"></p>
+        </div>
+    </div>
+
+    <script>
+        // Инициализация Telegram WebApp
+        const tg = window.Telegram.WebApp;
+        
+        // Развернуть приложение на весь экран
+        tg.expand();
+        
+        // Показать данные пользователя
+        function showUserData() {
+            const user = tg.initDataUnsafe.user;
+            const userDataDiv = document.getElementById('userData');
+            const dataOutput = document.getElementById('dataOutput');
+            
+            if (user) {
+                dataOutput.innerHTML = `
+                    ID: ${user.id}<br>
+                    Имя: ${user.first_name}<br>
+                    Фамилия: ${user.last_name || 'не указана'}<br>
+                    Username: @${user.username || 'не указан'}
+                `;
+                userDataDiv.style.display = 'block';
+            } else {
+                dataOutput.innerHTML = 'Данные пользователя недоступны.';
+                userDataDiv.style.display = 'block';
+            }
+        }
+        
+        // Отправить данные боту
+        function sendToBot() {
+            tg.sendData(JSON.stringify({ action: "hello", text: "Привет, бот!" }));
+        }
+        
+        // Закрыть Mini App
+        function closeApp() {
+            tg.close();
+        }
+        
+        // Можно добавить обработчик событий от Telegram
+        tg.onEvent('viewportChanged', () => {
+            console.log('Размер окна изменился');
+        });
+    </script>
+</body>
+</html>
